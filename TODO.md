@@ -1,0 +1,3 @@
+- better complete README.md
+- faire son rapport de soutenance  
+- add program R 
