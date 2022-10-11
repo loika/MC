@@ -76,7 +76,7 @@ if the command did not work, you can install the packages one by one with the co
 pip install [package]
 ```
 
-## Contibutor
+## Contributor
 
 - **Loik johan ACAKPO-ADDRA** _alias_ [@loik77360](https://github.com/loik77360/PSD)
 
