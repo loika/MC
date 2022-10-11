@@ -47,15 +47,14 @@ function gravity(ens::Any,N::Integer,str::AbstractString)
     end    
 end
 
-function cond_neigh(M::AbstractArray,pos::Tuple,neighbour::Any)
-    if M[CartesianIndex(pos)] == 1
-        for next in neighbour #next door
-            if M[CartesianIndex(next)] == 1
-                return false
-            end
+function particle_presence(M::AbstractArray,neighbour::Any)
+    for next in neighbour #next door
+        if M[CartesianIndex(next)] == 1
+            return true
         end
     end
-    return true
+    
+    return false
 end
 
 function check(M::AbstractArray)
@@ -66,18 +65,46 @@ function check(M::AbstractArray)
     save = []
     while !(length(PILE) == 0)
         pos = pop!(PILE)
+        push!(save,pos)
         if pos in save
             continue
         end
         neighbour = neigh(pos,N,"forward")
-        if !cond_neigh(M,pos,neighbour)
+        if M[CartesianIndex(pos)] == 1 && particle_presence(M,neighbour)
             return false
         end
-        append!(PILE,neighbour)
-        push!(save,pos)
+        for next in neighbour
+            if !(next in save)
+                push!(PILE,next)
+            end
+        end
         
     end
     return true
+end
+
+function chessboard(dims::Tuple)
+    dim = length(dims)
+    N = dims[1]
+    PILE = [Tuple(ones(Integer,dim))]
+    save = []
+    M = zeros(Integer,dims)
+    while !(length(PILE) == 0)
+        pos = pop!(PILE)
+        push!(save,pos)
+        neighbour = neigh(pos,N,"forward")
+        if (sum(pos) % 2) == 1
+            M[CartesianIndex(pos)] = 1
+        end
+        for next in neighbour
+            if !(next in save)
+                push!(PILE,next)
+            end
+        end
+        
+    end
+    return M
+
 end
 
 mean(X) = sum(X)/length(X)
